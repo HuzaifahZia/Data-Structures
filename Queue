@@ -1,0 +1,108 @@
+Source:
+#include <iostream>
+#include "Header.h"
+using namespace std;
+
+int main() {
+	int op = 0, dat = 0;
+	Queue a;
+	while (op != 4) {
+		cout << "\t\tQueue Menu:\n";
+		cout << "Press 1 Insert\nPress 2 Delete\nPress 3 print\nPress 4 Exit\n";
+		cout << "Enter Commad: ";
+		cin >> op;
+		switch (op) {
+		case 1:
+			cout << "Enter Data: "; cin >> dat;
+			a.insert(dat);
+			break;
+		case 2:
+			dat = a.del();
+			if (dat != NULL) {
+				cout << "Data Deleted: " << dat << endl;
+			}
+			break;
+		case 3:
+			a.print();
+			break;
+		case 4:
+			break;
+		}
+		system("pause");
+		system("cls");
+	}
+	cout << endl;
+	system("pause");
+}
+Header:
+#pragma once
+#include <iostream>
+using namespace std;
+//Data type: Single Linked List Queue
+class Queue {
+private:
+	struct node {
+		int dat;//contains data
+		node* n = NULL;//contains adddress of next address 
+		//is intialized with Null everytime a node type data type is made
+	};
+	node * head, * tail;//head points the begining of list and tail points end 
+public:
+	Queue(){
+		head = NULL;
+		tail = NULL;
+	}
+	bool empty() {
+		if (head == NULL) {
+			cout << "Queue is empty\n";
+			return true;
+		} 
+		else {
+			return false;
+		}
+	}
+	void insert(int a) {//insert data at tail
+		node* p = new node;
+		p->dat = a;
+		if (head == NULL) {
+			head = p;
+			tail = p;
+		}
+		else {
+			tail->n=p;
+			tail = p;
+		}
+	}
+	int del() {///deleting data from head
+		if (!empty()) {
+			int a = head->dat;
+			node* temp = head;
+			head = head->n;
+			if (head == NULL) {
+				tail = NULL;
+			}
+			delete temp;
+			return a;
+		}
+		else {
+			return NULL;//returning null if list is empty
+		}
+	}
+	void print() {
+		node* p = head;//temporary variabe to traverse
+		if(!empty()){
+			cout << "Data: ";
+			while (p != NULL) {
+				cout << p->dat << " ";
+				p = p->n;
+			}
+			cout << endl;
+		}
+	}
+	~Queue() {
+		int s = 1;
+		while (s != NULL) {//deleting linked list
+			s = del();
+		}
+	}
+};
