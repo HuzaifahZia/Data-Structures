@@ -1,0 +1,149 @@
+Source:
+#include <iostream>
+#include "Header.h"
+using namespace std;
+
+int main() {
+	int op = 0, dat = 0, pos = 0;
+	cout << "Enter size of Heap: "; cin >> dat;
+	max_heap a(dat);
+	cout << "\t\tQueue Menu:\n";
+	cout << "Press 1 Insert\nPress 2 Delete\nPress 3 print\nPress 4 Increase Key\n";
+	cout << "Press 5 Decrease Key\nPress 6 Exit\n";
+	while (op != 6) {
+		cout << "Enter command: ";
+		cin >> op;
+		switch (op) {
+		case 1:
+			cout << "Enter Data: "; cin >> dat;
+			a.insert(dat);
+			break;
+		case 2:
+			a.del();
+			break;
+		case 3:
+			a.print();
+			break;
+		case 4:
+			cout << "Enter Increasing factor: "; cin >> dat;
+			cout << "Enter Index: "; cin >> pos;
+			a.in_key(dat, pos);
+			break;
+		case 5:
+			cout << "Enter Decreasing factor: "; cin >> dat;
+			cout << "Enter Index: "; cin >> pos;
+			a.de_key(dat, pos);
+			break;
+		}
+		//system("pause");
+		//system("cls");
+	}
+	cout << endl;
+	system("pause");
+}
+Header:
+#pragma once
+#include <iostream>
+using namespace std;
+//Data type: Queue Maximum Heap
+class max_heap {
+private:
+	int *arr;
+	int s, top;//s is size of array and top is the last index inserted
+public:
+	max_heap(int ss = 5) {
+		s = ++ss;
+		top = 0;
+		arr = new int[s];
+		for (int i = 0; i < s; ++i) {
+			arr[i] = -1;
+		}
+	}
+	bool empty() {
+		if (arr[1]==-1) {
+			cout << "Heap is empty\n";
+			return true;
+		}
+		return false;
+	}
+	void swap(int a, int b) {//a and b are indexes that are being swapped
+		int temp = arr[a];
+		arr[a] = arr[b];
+		arr[b] = temp;
+	}
+	void perculate_up(int i) {//i is index which has to be percolated upwards
+		while (i / 2 > 0) {
+			if (arr[i / 2] < arr[i]) {
+				swap(i, i / 2);
+			}
+			else {
+				return;
+			}
+			i = i / 2;
+		}
+	}
+	void perculate_dwn(int i) {//i is index which has to be percolated downwards
+		while (i < top - 1) {
+			if (arr[2 * i] > arr[2 * i + 1]) {
+				if (arr[i] < arr[2 * i]) {
+					swap(i, 2 * i);
+					i = 2 * i;
+				}
+				else {
+					return;
+				}
+			}
+			else {
+				if (arr[i] < arr[2 * i + 1]) {
+					swap(i, 2 * i + 1);
+					i = 2 * i + 1;
+				}
+				else {
+					return;
+				}
+			}
+		}
+	}
+	void insert(int a) {
+		++top;
+		if (top == s) {
+			cout << "Heap is Full.\n";
+			top--;
+			return;
+		}
+		else {
+			arr[top] = a;
+			perculate_up(top);
+		}
+	}
+	void del() {
+		if (!empty()) {
+			swap(top, 1);
+			arr[top--] == -1;
+			perculate_dwn(1);
+		}
+	}
+	void in_key(int f, int p) {//increases key with factor f and on position p
+		if (p > 0 && p <= top) {
+			arr[p] += f;
+			perculate_up(p);
+		}
+	}
+	void de_key(int f, int p) {//decreases key with factor f and on position p
+		if (p > 0 && p <= top) {
+			arr[p] -= f;
+			perculate_dwn(p);
+		}
+	}
+	void print() {
+		if (!empty()) {
+			for (int i = 1; i <= top; ++i) {
+				cout << arr[i] << " ";
+			}
+			cout << endl;
+		}
+	}
+	~max_heap() {
+		delete [] arr;
+	}
+};
