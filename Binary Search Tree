@@ -1,0 +1,127 @@
+Header:
+#pragma once
+#include <iostream>
+using namespace std;
+//Data type: Binary Search Tree
+class BST {
+private:
+	struct node {
+		int dat = 0;
+		node* l = NULL;
+		node* r = NULL;
+	};
+	node* root;
+public:
+	BST() {
+		root = NULL;
+	}
+	bool empty() {
+		if (root == NULL) {
+			cout << "Tree is empty\n";
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	void insert(int a) {
+		node* p = root;
+		node* pt = new node;
+		pt->dat = a;
+		if (!empty()) {
+			while (p != NULL) {
+				if (a > p->dat) {
+					if (p->r == NULL) {
+						p->r = pt;
+						return;
+					}
+					p = p->r;
+				}
+				else {
+					if (p->l == NULL) {
+						p->l = pt;
+						return;
+					}
+					p = p->l;
+				}
+			}
+		}
+		else {
+			root = pt;
+		}
+	}
+	void search(int a) {
+		node* p = root;
+		if (!empty()) {
+			while (p != NULL) {
+				if (a == p->dat) {
+					cout << "Data found\n";
+					return;
+				}
+				else if (a > p->dat) {
+					p = p->r;
+				}
+				else {
+					p = p->l;
+				}
+			}
+			cout << "Data Not found\n";
+		}
+	}
+	void search_del(int k, node*&pt) {
+		if (pt != NULL) {
+			if (k > pt->dat) {
+				search_del(k, pt->l);
+			}
+			else if (k < pt->dat) {
+				search_del(k, pt->l);
+			}
+			else {
+				del(pt);
+			}
+		 }
+		else {
+			cout << "Tree is empty\n";
+			return;
+		}
+	}
+	void del(node *& pt) {
+		node* temp;
+		if (pt->r == NULL) {
+			temp = pt;
+			pt = pt->l;
+			delete temp;
+		}
+		else if (pt->l == NULL) {
+			temp = pt;
+			pt = pt->r;
+			delete temp;
+		}
+		else {
+			temp = pt->r;
+			while (temp->l) {
+				temp = temp->l;
+			}
+			temp->l = pt->l;
+			temp = pt;
+			pt = pt->r;
+			delete temp;
+		}
+	}
+	void del_node(int k) {
+		search_del(k, root);
+	}
+	void print(node* a) {
+		if (a == NULL) {
+			return;
+		}
+		cout << a->dat << " ";
+		print(a->l);
+		print(a->r);
+	}
+	void order() {
+		print(root);
+	}
+	~BST() {
+	}
+};
